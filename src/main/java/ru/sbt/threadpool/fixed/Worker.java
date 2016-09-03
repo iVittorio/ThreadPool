@@ -9,6 +9,7 @@ import java.util.Queue;
 public class Worker implements Runnable {
     private final Queue<Runnable> tasks;
     private final Object lock;
+    private Runnable task;
 
     private Worker(Queue<Runnable> tasks, Object lock) {
         this.tasks = tasks;
@@ -31,8 +32,8 @@ public class Worker implements Runnable {
                         throw new RuntimeException("Thread: " + Thread.currentThread().getName() + " Interrupted");
                     }
                 }
+                task = tasks.poll();
             }
-            Runnable task = tasks.poll();
             try {
                 task.run();
             } catch (Exception e) {
